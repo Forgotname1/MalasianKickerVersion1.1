@@ -7,13 +7,29 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		7BBA09092EDAD69400510F9F /* MalaysionKicker_v1.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalaysionKicker_v1.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BBA091C2EDADD3300510F9F /* MalaysionKicker_v1.1.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MalaysionKicker_v1.1.xcodeproj; sourceTree = "<group>"; };
+		7BBA09242EDB16C200510F9F /* MalaysionKicker_v1.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalaysionKicker_v1.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		7BBA090B2EDAD69400510F9F /* MalaysionKicker_v1.1 */ = {
+		7BBA091A2EDADD3300510F9F /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MalaysionKicker_v1.1;
+			path = App;
+			sourceTree = "<group>";
+		};
+		7BBA091B2EDADD3300510F9F /* Game */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Game;
+			sourceTree = "<group>";
+		};
+		7BBA091E2EDADD3300510F9F /* Utils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		7BBA09252EDB179600510F9F /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -32,16 +48,17 @@
 		7BBA09002EDAD69400510F9F = {
 			isa = PBXGroup;
 			children = (
-				7BBA090B2EDAD69400510F9F /* MalaysionKicker_v1.1 */,
-				7BBA090A2EDAD69400510F9F /* Products */,
+				7BBA09252EDB179600510F9F /* Resources */,
+				7BBA091A2EDADD3300510F9F /* App */,
+				7BBA091B2EDADD3300510F9F /* Game */,
+				7BBA091C2EDADD3300510F9F /* MalaysionKicker_v1.1.xcodeproj */,
+				7BBA091E2EDADD3300510F9F /* Utils */,
+				7BBA09242EDB16C200510F9F /* MalaysionKicker_v1.1.app */,
 			);
 			sourceTree = "<group>";
 		};
-		7BBA090A2EDAD69400510F9F /* Products */ = {
+		7BBA091F2EDADD3300510F9F /* Products */ = {
 			isa = PBXGroup;
-			children = (
-				7BBA09092EDAD69400510F9F /* MalaysionKicker_v1.1.app */,
-			);
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -61,13 +78,16 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				7BBA090B2EDAD69400510F9F /* MalaysionKicker_v1.1 */,
+				7BBA091A2EDADD3300510F9F /* App */,
+				7BBA091B2EDADD3300510F9F /* Game */,
+				7BBA091E2EDADD3300510F9F /* Utils */,
+				7BBA09252EDB179600510F9F /* Resources */,
 			);
 			name = MalaysionKicker_v1.1;
 			packageProductDependencies = (
 			);
 			productName = MalaysionKicker_v1.1;
-			productReference = 7BBA09092EDAD69400510F9F /* MalaysionKicker_v1.1.app */;
+			productReference = 7BBA09242EDB16C200510F9F /* MalaysionKicker_v1.1.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -82,6 +102,7 @@
 				TargetAttributes = {
 					7BBA09082EDAD69400510F9F = {
 						CreatedOnToolsVersion = 26.1;
+						LastSwiftMigration = 2610;
 					};
 				};
 			};
@@ -95,8 +116,14 @@
 			mainGroup = 7BBA09002EDAD69400510F9F;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
-			productRefGroup = 7BBA090A2EDAD69400510F9F /* Products */;
+			productRefGroup = 7BBA09002EDAD69400510F9F;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 7BBA091F2EDADD3300510F9F /* Products */;
+					ProjectRef = 7BBA091C2EDADD3300510F9F /* MalaysionKicker_v1.1.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				7BBA09082EDAD69400510F9F /* MalaysionKicker_v1.1 */,
@@ -250,6 +277,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -272,6 +300,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -282,6 +311,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
