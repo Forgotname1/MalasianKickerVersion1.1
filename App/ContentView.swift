@@ -10,8 +10,7 @@ import SpriteKit
 struct ContentView: View {
 
     var scene: SKScene {
-        let s = GameScene(size: CGSize(width: 1536, height: 1024))
-        s.scaleMode = .aspectFit
+        let s = MenuScene(size: CGSize(width: 1536, height: 1024))
         return s
     }
 
