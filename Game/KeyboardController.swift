@@ -1,53 +1,47 @@
-//
-//  KeyboardController.swift
-//  MalaysionKicker_v1.1
-//
-//  Created by Илья Моторов on 30/11/2568 BE.
-//
+import Cocoa
 
-import SpriteKit
-
-/// Класс отвечает за обработку клавиш:
-/// - хранит состояние нажатых кнопок
-/// - сообщает GameScene, куда хочет идти игрок
-/// - не содержит логики движения!
 class KeyboardController {
 
-    // флаги направления (true когда клавиша зажата)
+    // MARK: - Key states
     var left = false
     var right = false
     var up = false
     var down = false
-
-    // бег (Shift)
     var shift = false
+    var ePressed = false      // ← ДОБАВИЛИ ЭТО!
 
-    /// Обработка нажатия клавиши
-    func keyDown(_ code: UInt16, flags: NSEvent.ModifierFlags) {
 
-        // проверяем зажат ли Shift
-        shift = flags.contains(.shift)
-
-        switch code {
-        case 123: left = true    // ←
-        case 124: right = true   // →
-        case 125: down = true    // ↓
-        case 126: up = true      // ↑
-        default: break
-        }
+    // MARK: - Key codes
+    enum KeyCode {
+        static let left: UInt16  = 123
+        static let right: UInt16 = 124
+        static let down: UInt16  = 125
+        static let up: UInt16    = 126
+        static let shift: UInt16 = 56
+        static let e: UInt16     = 14   // ← ДОБАВИЛИ ЭТО!
     }
 
-    /// Обработка отпускания клавиши
-    func keyUp(_ code: UInt16) {
-        switch code {
-        case 123: left = false
-        case 124: right = false
-        case 125: down = false
-        case 126: up = false
-        default: break
-        }
 
-        // если отпущена любая стрелка — сбрасываем shift
-        shift = false
+    // MARK: - Key Down
+    func keyDown(_ code: UInt16, flags: NSEvent.ModifierFlags) {
+
+        if code == KeyCode.left  { left  = true }
+        if code == KeyCode.right { right = true }
+        if code == KeyCode.up    { up    = true }
+        if code == KeyCode.down  { down  = true }
+        if code == KeyCode.e     { ePressed = true }    // ← ДОБАВЛЕНО
+
+        shift = flags.contains(.shift)
+    }
+
+
+    // MARK: - Key Up
+    func keyUp(_ code: UInt16) {
+
+        if code == KeyCode.left  { left  = false }
+        if code == KeyCode.right { right = false }
+        if code == KeyCode.up    { up    = false }
+        if code == KeyCode.down  { down  = false }
+        if code == KeyCode.e     { ePressed = false }   // ← ДОБАВЛЕНО
     }
 }

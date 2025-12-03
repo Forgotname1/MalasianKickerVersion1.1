@@ -42,7 +42,7 @@ class Player: SKSpriteNode {
     /// - масштаб персонажа
     init() {
         let atlas = SKTextureAtlas(named: "Player")
-
+        
         // сортировка кадров по числам (walk_01, walk_02, walk_03…)
         let frames = atlas.textureNames
             .sorted { a, b in
@@ -59,7 +59,7 @@ class Player: SKSpriteNode {
                    color: .clear,
                    size: idleTexture.size())
 
-        self.zPosition = 10
+        self.zPosition = 100
 
         // уменьшаем спрайт (в 4 раза)
         self.setScale(0.25)

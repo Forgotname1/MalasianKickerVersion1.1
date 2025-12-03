@@ -1,179 +1,208 @@
 import SpriteKit
 
 class GameScene: SKScene {
-    
-    let playerCategory: UInt32 = 0x1 << 0
+
+    // MARK: - Core
     var player: Player!
     var bgManager: BackgroundManager!
     var keyboard = KeyboardController()
-    
-    
-    
-    let backgroundNames = [
-        "backgroundScene1.1",
-        "backgroundScene1.2",
-        "backgroundScene1.3"
-    ]
-    
-    
-    let roadMinY: CGFloat = 120  // нижняя граница дороги
-    let roadMaxY: CGFloat = 350   // верхняя граница дороги
 
-    var currentBGIndex = 0
-    var backgroundNode: SKSpriteNode!
-    
-    
-    var moveLeft = false
-    var moveRight = false
-    let moveSpeed: CGFloat = 4.0   // скорость (можно менять)
-    
-    
-    
+    // Байк
+    var parkedBike: SKSpriteNode?   // статичный байк на фоне
+    var bike: Bike?
+    var isOnBike = false
+    // анимированный байк с игроком
+    let bikeSpawnIndex = 2      // байк появляется на третьем фоне
+
+    // Подсказка
+    var hint: InteractionHint?
+
+    // Границы переходов
+    let rightSwitchX: CGFloat = 1450
+    let leftSwitchX: CGFloat = 50
+
+    // Границы дороги
+    let minY: CGFloat = 180
+    let maxY: CGFloat = 280
+
+
+    // MARK: - Scene Init
     override func didMove(to view: SKView) {
+
         bgManager = BackgroundManager()
-        // фиксированный размер под фон
-        self.size = CGSize(width: 1536, height: 1024)
-        self.scaleMode = .aspectFit
+        size = CGSize(width: 1536, height: 1024)
+        scaleMode = .aspectFit
         backgroundColor = .black
 
-        // загружаем фоны
         bgManager.loadBackgrounds(
             names: ["backgroundScene1.1", "backgroundScene1.2", "backgroundScene1.3"],
             into: self
         )
 
-        // создаём игрока
         setupPlayer()
 
-        // включаем обработку клавиш
+        // включаем клавиши
         view.window?.makeFirstResponder(self)
     }
-    
-    func setupBackground() {
-        let name = backgroundNames[currentBGIndex]
-        backgroundNode = SKSpriteNode(imageNamed: name)
-        backgroundNode.anchorPoint = CGPoint(x: 0, y: 0)
-        backgroundNode.position = CGPoint(x: 0, y: 0)
-        backgroundNode.zPosition = -10
-        backgroundNode.size = backgroundNode.texture!.size()
-        addChild(backgroundNode)
-    }
-    
+
+
+    // MARK: - Player
     func setupPlayer() {
         player = Player()
         player.position = CGPoint(x: 400, y: 200)
         addChild(player)
     }
+
+
+    // MARK: - Bike spawn
+    func spawnParkedBike() {
+        guard parkedBike == nil else { return }
+        guard !isOnBike else { return }   // ← если уже на байке, НИЧЕГО не создаём
+
+        let tex = SKTexture(imageNamed: "bike_idle")
+        let bikeNode = SKSpriteNode(texture: tex)
+        bikeNode.position = CGPoint(x: 500, y: 250)
+        bikeNode.zPosition = 40
+        bikeNode.setScale(0.15)
+
+        addChild(bikeNode)
+        parkedBike = bikeNode
+    }
     
+
+
+
+    // MARK: - Interaction logic
+    func checkBikeInteraction() {
+        guard !isOnBike else { return }       // ← защитный ранний выход
+        guard let parkedBike else { return }
+
+        let dist = abs(player.position.x - parkedBike.position.x)
+
+        if dist < 120 {
+            showHint(text: "Press  E")
+            if keyboard.ePressed {
+                keyboard.ePressed = false
+                hideHint()
+                enterBike()
+            }
+        } else {
+            hideHint()
+        }
+    }
+
+    func enterBike() {
+
+        guard let parked = parkedBike else { return }
+        let bikePosition = parked.position
+
+        parked.removeFromParent()
+        parkedBike = nil
+
+        player.isHidden = true
+        isOnBike = true          // ← теперь считаем, что игрок уже на байке
+
+        let ridingBike = Bike()
+        ridingBike.position = bikePosition
+        ridingBike.zPosition = 60
+        addChild(ridingBike)
+        self.bike = ridingBike
+
+        ridingBike.startDriveAnimation()
+        ridingBike.driveOffScreen {
+            print("🏁 Байк уехал")
+            // здесь потом будем грузить новую сцену, если надо
+        }
+    }
+
+
+    // MARK: - Interaction hint
+    func showHint(text: String) {
+        if hint == nil {
+            hint = InteractionHint()
+            hint!.position = CGPoint(x: frame.midX, y: 300)
+            addChild(hint!)
+        }
+        hint?.setText(text)
+        hint?.isHidden = false
+    }
+
+    func hideHint() {
+        hint?.isHidden = true
+    }
+
+
+    // MARK: - Keyboard
     override func keyDown(with event: NSEvent) {
         keyboard.keyDown(event.keyCode, flags: event.modifierFlags)
     }
-    
+
     override func keyUp(with event: NSEvent) {
         keyboard.keyUp(event.keyCode)
         player.stopWalkAnimation()
         player.currentSpeed = player.walkSpeed
     }
-    
+
+
+    // MARK: - Update
     override func update(_ currentTime: TimeInterval) {
 
-        // Границы перехода между фонами
-        let rightSwitchX: CGFloat = 1450
-        let leftSwitchX: CGFloat = 50
+        if bgManager.currentIndex == bikeSpawnIndex && !isOnBike {
+            spawnParkedBike()
+            checkBikeInteraction()
+        }
 
-        // Границы дороги
-        let minY: CGFloat = 180
-        let maxY: CGFloat = 280
+        if !player.isHidden {
+            handlePlayerMovement()
+        }
+    }
 
-        // Если нажата хоть одна стрелка — стартуем walk/run
+
+    // MARK: - Player Movements
+    func handlePlayerMovement() {
+
         if keyboard.left || keyboard.right || keyboard.up || keyboard.down {
+
             if keyboard.shift {
-                player.currentSpeed = player.runSpeed   // бег
+                player.currentSpeed = player.runSpeed
                 player.startRunAnimation()
             } else {
-                player.currentSpeed = player.walkSpeed  // шаг
+                player.currentSpeed = player.walkSpeed
                 player.startWalkAnimation()
             }
         }
 
-        // ← движение влево
+        // ←
         if keyboard.left {
             player.moveLeft()
-
-            // переход на предыдущий фон
             if player.position.x < leftSwitchX {
                 bgManager.previousBackground()
-                player.position.x = 1500   // появляемся справа
+                player.position.x = 1500
+                hideHint()
             }
         }
 
-        // → движение вправо
+        // →
         if keyboard.right {
             player.moveRight()
 
-            // переход на следующий фон
             if player.position.x > rightSwitchX {
                 bgManager.nextBackground()
-                player.position.x = 80     // появляемся слева
+                player.position.x = 80
+                hideHint()
             }
         }
 
-        // ↓ движение вниз (ограничено дорогой)
+        // ↓
         if keyboard.down {
             player.moveDown()
             if player.position.y < minY { player.position.y = minY }
         }
 
-        // ↑ движение вверх (ограничено дорогой)
+        // ↑
         if keyboard.up {
             player.moveUp()
             if player.position.y > maxY { player.position.y = maxY }
         }
     }
-    
-    func changeBackground() {
-        currentBGIndex = (currentBGIndex + 1) % backgroundNames.count
-
-        let newTexture = SKTexture(imageNamed: backgroundNames[currentBGIndex])
-        newTexture.filteringMode = .nearest
-        backgroundNode.texture = newTexture
-        backgroundNode.size = newTexture.size()
-    }
-    func goToNextBackgroundFromRight() {
-        // переключаем фон
-        currentBGIndex = (currentBGIndex + 1) % backgroundNames.count
-
-        let newTexture = SKTexture(imageNamed: backgroundNames[currentBGIndex])
-        newTexture.filteringMode = .nearest
-        backgroundNode.texture = newTexture
-        backgroundNode.size = newTexture.size()
-
-        // появляется немного слева за экраном
-     
-    }
-    func goToPreviousBackgroundFromLeft() {
-        currentBGIndex -= 1
-        if currentBGIndex < 0 {
-            currentBGIndex = backgroundNames.count - 1
-        }
-
-        let newTex = SKTexture(imageNamed: backgroundNames[currentBGIndex])
-        newTex.filteringMode = .nearest
-        backgroundNode.texture = newTex
-        backgroundNode.size = newTex.size()
-
-        // появляемся справа за экраном
-        
-    }
-//    func startWalkAnimation() {
-//        if player.action(forKey: "walk") == nil {
-//            player.run(walkAnimation, withKey: "walk")
-//        }
-//    }
-//
-//    func stopWalkAnimation() {
-//        player.removeAction(forKey: "walk")
-//        player.texture = idleTexture
-//    }
-
 }

@@ -1,0 +1,19 @@
+# Xcode
+DerivedData/
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# macOS
+.DS_Store
+
+# SwiftPM
+.swiftpm/
+.build/
+
+# Logs
+*.log
+
+# Xcode build output
+build/
+Build/
