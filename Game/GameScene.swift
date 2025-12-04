@@ -110,9 +110,14 @@ class GameScene: SKScene {
 
         ridingBike.startDriveAnimation()
         ridingBike.driveOffScreen {
-            print("🏁 Байк уехал")
-            // здесь потом будем грузить новую сцену, если надо
+            let scene = RoadScene(size: self.size)
+            scene.scaleMode = .aspectFill        // ← ВОТ ЭТО ФИКСИТ КАЧЕСТВО ФОНА
+            self.view?.presentScene(scene, transition: SKTransition.fade(withDuration: 1.0))
         }
+//        ridingBike.driveOffScreen { [weak self] in
+//            print("🏁 Байк уехал")
+//            self?.goToRoadScene()
+//        }
     }
 
 
@@ -131,6 +136,14 @@ class GameScene: SKScene {
         hint?.isHidden = true
     }
 
+    func goToRoadScene() {
+        let newScene = RoadScene(size: self.size)
+        newScene.scaleMode = .aspectFit
+
+        let transition = SKTransition.fade(withDuration: 1.0)
+
+        self.view?.presentScene(newScene, transition: transition)
+    }
 
     // MARK: - Keyboard
     override func keyDown(with event: NSEvent) {

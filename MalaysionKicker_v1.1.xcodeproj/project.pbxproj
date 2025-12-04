@@ -9,7 +9,6 @@
 /* Begin PBXFileReference section */
 		7BBA091C2EDADD3300510F9F /* MalaysionKicker_v1.1.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = MalaysionKicker_v1.1.xcodeproj; sourceTree = "<group>"; };
 		7BBA09242EDB16C200510F9F /* MalaysionKicker_v1.1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalaysionKicker_v1.1.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7BDCB7C72EE0630E004E177E /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,7 +48,6 @@
 		7BBA09002EDAD69400510F9F = {
 			isa = PBXGroup;
 			children = (
-				7BDCB7C72EE0630E004E177E /* Untitled.swift */,
 				7BBA09252EDB179600510F9F /* Resources */,
 				7BBA091A2EDADD3300510F9F /* App */,
 				7BBA091C2EDADD3300510F9F /* MalaysionKicker_v1.1.xcodeproj */,
